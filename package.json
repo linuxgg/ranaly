@@ -5,7 +5,14 @@
     "start": "node ranaly"
   },
   "dependencies": {
-    "express": "3.0.0rc2",
+    "express": "*",
+    "express-session": "*",
+    "cookie-parser": "*",
+    "serve-favicon": "*",
+    "body-parser": "*",
+    "compression": "*",
+    "method-override": "*",
+    "errorhandler": "*",
     "connect": "*",
     "jade": "*",
     "js-yaml": "2.0.2",

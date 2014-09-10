@@ -2,7 +2,7 @@ mixin realtime_count(widget)
   .col
     h2 #{widget.title}
     div(id="container" + widget.id)
-    script
+    script(type='text/javascript').
       $(function () {
         var widget = !{JSON.stringify(widget)}
         var socket = io.connect('http://' + document.location.host);

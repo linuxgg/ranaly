@@ -1,7 +1,7 @@
 mixin amount_today_count(widget)
   style
   div.clearfix(id='container' + widget.id)
-  script
+  script(type='text/javascript').
     $(function () {
       var widget = !{JSON.stringify(widget)};
       var id = widget.id;

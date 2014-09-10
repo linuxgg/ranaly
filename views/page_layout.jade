@@ -3,7 +3,7 @@ extends layout
 block content
   .navbar
     .navbar-inner
-      a.brand(href="/") #{config.app_name}
+      a.brand(href="/") #{title}
       ul.nav
         for _page in menus
           if _page.id == page.id

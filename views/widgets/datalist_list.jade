@@ -4,7 +4,7 @@ mixin datalist_list(widget)
     .clearfix(id="container" + widget.id)
       .content
       .pagination(style="margin-bottom: -10px; float: right")
-    script
+    script(type='text/javascript').
       var widget = !{JSON.stringify(widget)};
       var currentPage#{widget.id} = 1;
       var datalist_list_load_data#{widget.id} = function (page) {

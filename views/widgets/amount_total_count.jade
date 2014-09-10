@@ -32,7 +32,7 @@ mixin amount_total_count(widget)
       .modal-footer
         button.btn(data-dismiss='modal',aria-hidden='true') Cancel
         button.btn.btn-primary(id='okBtn' + widget.id) OK
-    script
+    script(type='text/javascript').
       $(function () {
         var widget = !{JSON.stringify(widget)};
         var id = widget.id;

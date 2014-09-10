@@ -10,31 +10,36 @@ var sub = require('redis').createClient(config.redis.port, config.redis.host);
 
 var app = express();
 
-var cookieParser = express.cookieParser(config.secret);
-var sessionStore = new (require('connect')).
-      middleware.session.MemoryStore();
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');
+var compression = require('compression');
+var methodOverride = require('method-override');
+var router = express.Router();
 
 var middleware = require('./middleware');
 
-app.configure(function(){
-  app.locals.config = config;
-  app.set('port', process.env.PORT || config.port);
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.set('title', config.app_name);
-  app.use(express.favicon(__dirname + '/public/favicon.ico'));
-  app.use(express.bodyParser());
-  app.use(cookieParser);
-  app.use(express.session({store: sessionStore}));
-  app.use(middleware.flash);
-  app.use(express.compress());
-  app.use(app.router);
-  app.use(express['static'](__dirname + '/public'));
-});
+app.set('port', process.env.PORT || config.port);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.set('title', config.app_name);
+app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cookieParser);
+app.use(methodOverride());
+app.use(session({ secret: 'ranaly' }));
+app.use(middleware.flash);
+app.use(compression({
+  threshold: 512
+}));
+app.use(express['static'](__dirname + '/public'));
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+if (process.env.NODE_ENV === 'development') {
+  // only use in development
+  app.use(errorhandler())
+}
 
 function noPageError(req, res) {
   res.locals.title = 'Error - ' + app.locals.settings.title;
@@ -151,10 +156,10 @@ server.listen(app.get('port'), function(){
  * Socket.io Server
  */
 var io = require('socket.io').listen(server, {log: false});
-io.enable('browser client etag');
+// io.enable('browser client etag');
 io.set('log level', 1);
 
-var sessionSockets = new (require('session.socket.io'))(io, sessionStore, cookieParser);
+var sessionSockets = new (require('session.socket.io'))(io, session, cookieParser);
 
 sub.on('message', function (channel, message) {
   io.sockets['in'](channel).emit('realtime value', {
